@@ -3,3 +3,10 @@
   text-align: center;
   width: 25%;
 }
+
+.form-group {
+  &.inline {
+      display: inline-block;
+      width: 40%;
+  }
+}

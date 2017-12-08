@@ -2,17 +2,17 @@
 
   <nav class="navbar navbar-dark bg-primary">
     <div class="nav navbar-nav">
-      <a routerLink="/" class="nav-item nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-        <i class="fa fa-home"></i> Home
+      <a routerLink="/cats" class="nav-item nav-link" routerLinkActive="active" *ngIf="auth.loggedIn">
+        <i class="fa fa-list"></i> Список квартир
       </a>
-      <a routerLink="/cats" class="nav-item nav-link" routerLinkActive="active">
-        <i class="fa fa-list"></i> Cats
+      <a routerLink="/add-apartments" class="nav-item nav-link" routerLinkActive="active" *ngIf="auth.loggedIn">
+        <i class="fa fa-list"></i> Добавить квартиру
       </a>
       <a routerLink="/login" class="nav-item nav-link" routerLinkActive="active" *ngIf="!auth.loggedIn">
-        <i class="fa fa-sign-in"></i> Login
+        <i class="fa fa-sign-in"></i> Логин
       </a>
       <a routerLink="/register" class="nav-item nav-link" routerLinkActive="active" *ngIf="!auth.loggedIn">
-        <i class="fa fa-user-plus"></i> Register
+        <i class="fa fa-user-plus"></i> Регистрация
       </a>
       <a routerLink="/account" class="nav-item nav-link" routerLinkActive="active" *ngIf="auth.loggedIn">
         <i class="fa fa-user"></i> Account ({{auth.currentUser.username}})

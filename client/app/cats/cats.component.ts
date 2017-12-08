@@ -14,12 +14,17 @@ export class CatsComponent implements OnInit {
   cat = {};
   cats = [];
   isLoading = true;
-  isEditing = false;
+  isEditing = -1;
 
   addCatForm: FormGroup;
-  name = new FormControl('', Validators.required);
-  age = new FormControl('', Validators.required);
-  weight = new FormControl('', Validators.required);
+  location_address = new FormControl('',[]);
+  rooms = new FormControl('',[]);
+  size = new FormControl('',[]);
+  price = new FormControl('',[]);
+  // creator = new FormControl('',[]);
+  description = new FormControl('',[]);
+  level = new FormControl('',[]);
+
 
   constructor(private catService: CatService,
               private formBuilder: FormBuilder,
@@ -28,18 +33,26 @@ export class CatsComponent implements OnInit {
   ngOnInit() {
     this.getCats();
     this.addCatForm = this.formBuilder.group({
-      name: this.name,
-      age: this.age,
-      weight: this.weight
+      location_address: this.location_address,
+      rooms: this.rooms,
+      size: this.size,
+      price: this.price,
+      // creator: this.creator,
+      description: this.description,
+      level: this.level,
     });
   }
 
   getCats() {
     this.catService.getCats().subscribe(
-      data => this.cats = data,
+      data => {
+        this.cats = data;
+        console.log('got cats', data);
+      }, 
       error => console.log(error),
       () => this.isLoading = false
     );
+    
   }
 
   addCat() {
@@ -54,13 +67,13 @@ export class CatsComponent implements OnInit {
     );
   }
 
-  enableEditing(cat) {
-    this.isEditing = true;
+  enableEditing(cat, i) {
+    this.isEditing = i;
     this.cat = cat;
   }
 
-  cancelEditing() {
-    this.isEditing = false;
+  cancelEditing(i) {
+    this.isEditing = -1;
     this.cat = {};
     this.toast.setMessage('item editing cancelled.', 'warning');
     // reload the cats to reset the editing
@@ -70,7 +83,7 @@ export class CatsComponent implements OnInit {
   editCat(cat) {
     this.catService.editCat(cat).subscribe(
       res => {
-        this.isEditing = false;
+        this.isEditing = -1;
         this.cat = cat;
         this.toast.setMessage('item edited successfully.', 'success');
       },

@@ -32,7 +32,9 @@
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
+    "@ngui/auto-complete": "^0.16.0",
     "angular2-jwt": "^0.2.3",
+    "angular2-yandex-maps": "^1.0.42",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "bootstrap": "4.0.0-alpha.5",
@@ -46,6 +48,7 @@
     "morgan": "^1.9.0",
     "rxjs": "^5.4.2",
     "tether": "1.4.0",
+    "ymaps": "^0.1.1",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

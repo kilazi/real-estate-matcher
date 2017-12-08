@@ -1,5 +1,7 @@
+import { GlobalService } from './services/global.service';
+import { AddApartmentsComponent } from './add-apartments/add-apartments.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
+import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 import { RoutingModule } from './routing.module';
 import { SharedModule } from './shared/shared.module';
 import { CatService } from './services/cat.service';
@@ -16,6 +18,9 @@ import { LogoutComponent } from './logout/logout.component';
 import { AccountComponent } from './account/account.component';
 import { AdminComponent } from './admin/admin.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+// Import relevant http modules
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { JsonpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -27,18 +32,24 @@ import { NotFoundComponent } from './not-found/not-found.component';
     LogoutComponent,
     AccountComponent,
     AdminComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AddApartmentsComponent
   ],
-  imports: [
+  imports: [ 
     RoutingModule,
-    SharedModule
+    SharedModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
+    JsonpModule,
+    NguiAutoCompleteModule
   ],
   providers: [
     AuthService,
     AuthGuardLogin,
     AuthGuardAdmin,
     CatService,
-    UserService
+    UserService,
+    GlobalService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

@@ -1,3 +1,4 @@
+import { AddApartmentsComponent } from './add-apartments/add-apartments.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
@@ -15,10 +16,11 @@ import { AuthGuardAdmin } from './services/auth-guard-admin.service';
 
 const routes: Routes = [
   { path: '', component: AboutComponent },
-  { path: 'cats', component: CatsComponent },
+  { path: 'cats', component: CatsComponent, canActivate: [AuthGuardLogin]  },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
+  { path: 'add-apartments', component: AddApartmentsComponent, canActivate: [AuthGuardLogin]  },
   { path: 'account', component: AccountComponent, canActivate: [AuthGuardLogin] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuardAdmin] },
   { path: 'notfound', component: NotFoundComponent },
