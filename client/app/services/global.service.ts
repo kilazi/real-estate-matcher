@@ -46,10 +46,10 @@ export class GlobalService {
 
     removeEmptyKeys(object) {
         for (const key in object) {
-            if (key != 'type' && key != 'description' && key.indexOf('location') == -1) {
-                //console.log('iterate through object', object, key, 'value of the key is [' + object[key] + ']', typeof object[key]);
+            if (key != 'type' && key != 'description' && key.indexOf('location') && key.indexOf('added_by')== -1) {
+                ////console.log('iterate through object', object, key, 'value of the key is [' + object[key] + ']', typeof object[key]);
                 if (!object[key] || object[key] == "") {
-                    //console.log('this key sucks!', key);
+                    ////console.log('this key sucks!', key);
                     object[key] = false;
                 } else object[key] = parseInt(object[key]);
             }
@@ -60,22 +60,22 @@ export class GlobalService {
     getCompareBuy(inputData, apt) {
         inputData = this.removeEmptyKeys(inputData);
         apt = this.removeEmptyKeys(apt);
-        console.log('comparedatabuy', inputData, apt);
+        //console.log('comparedatabuy', inputData, apt);
         if (apt.type == 'buy') return;
 
         let compare = 0;
 
         //geo
         if (inputData.buy_location_address1 || inputData.buy_location_address2 || inputData.buy_location_address3) {
-            console.log('geo 1');
+            //console.log('geo 1');
             if(inputData.buy_location_address1_x && inputData.buy_location_address1_y) {
-                console.log('geo 2');
+                //console.log('geo 2');
                 let distance = this.getDistanceFromLatLonInKm(inputData.buy_location_address1_x, inputData.buy_location_address1_y, apt.location_address_x, apt.location_address_y)
                 if(distance<=1) compare = compare + 3;
                 else if (distance <=5) compare++;
                 else if (distance <=7) compare--;
                 // else return;
-                console.log('geo 3', compare);
+                //console.log('geo 3', compare);
             }
             if(inputData.buy_location_address2_x && inputData.buy_location_address2_y) {
                 let distance = this.getDistanceFromLatLonInKm(inputData.buy_location_address2_x, inputData.buy_location_address2_y, apt.location_address_x, apt.location_address_y)
@@ -123,24 +123,24 @@ export class GlobalService {
 
         //size
         if (inputData.buy_size_from || inputData.buy_size_to) {
-            //console.log('going to compare prices !');
+            ////console.log('going to compare prices !');
             if (inputData.buy_size_from) {
-                //console.log('going to compare FROM size !');
+                ////console.log('going to compare FROM size !');
                 if (apt.size >= inputData.buy_size_from) {
-                    //console.log('size+2');
+                    ////console.log('size+2');
                     compare = compare + 2;
                 }
                 else if (apt.size >= inputData.buy_size_from - 10) {
-                    //console.log('size+1');
+                    ////console.log('size+1');
                     compare = compare + 1;
                 }
                 else {
-                    //console.log('fuck it');
+                    ////console.log('fuck it');
                     return;
                 }
             }
             if (inputData.buy_size_to) {
-                //console.log('compare 1');
+                ////console.log('compare 1');
                 if (apt.size <= inputData.buy_size_to) compare = compare + 2;
                 else if (apt.size <= inputData.buy_size_to + 10) compare = compare + 1;
                 else return;
@@ -150,52 +150,82 @@ export class GlobalService {
         //level
         if (inputData.buy_level_from || inputData.buy_level_to) {
             if (inputData.buy_level_from) {
-                //console.log('compare 11');
+                ////console.log('compare 11');
                 if (apt.level >= inputData.buy_level_from) compare = compare + 2;
                 // else if (apt.level >= inputData.buy_level_from - 1) compare = compare + 1;
                 else return;
             }
             if (inputData.buy_level_to) {
-                //console.log('compare 111');
+                ////console.log('compare 111');
                 if (apt.level <= inputData.buy_level_to) compare = compare + 2;
                 // else if (apt.level <= inputData.buy_level_to + 1) compare = compare + 1;
                 else return;
             }
         }
-        //console.log('compare now is', compare);
+        ////console.log('compare now is', compare);
 
-        return compare;
+        return {score :compare};
     }
 
     getCompareSell(inputData, apt) {
         inputData = this.removeEmptyKeys(inputData);
         apt = this.removeEmptyKeys(apt);
-        console.log('comparedatasell', inputData, apt);
+        //console.log('comparedatasell', inputData, apt);
         if (apt.type == 'sell') return;
 
         let compare = 0;
-
+        let fai;
         //geo
         if (inputData.location_address_x && inputData.location_address_y) {
-            if(apt.buy_location_address1_x && apt.location_address1_y) {
+            console.log('IF1 passed');
+            if(apt.buy_location_address1_x && apt.buy_location_address1_y) {
+                console.log('IF2 passed');
                 let distance = this.getDistanceFromLatLonInKm(apt.buy_location_address1_x, apt.buy_location_address1_y, inputData.location_address_x, inputData.location_address_y)
-                if(distance<=1) compare = compare + 3;
-                else if (distance <=5) compare++;
-                else if (distance <=7) compare--;
+                console.log('IF1 passed distance ' + distance);
+                if(distance<=1) {
+                    compare = compare + 3;
+                    fai = 1;
+                }
+                else if (distance <=5) {
+                    compare++;
+                    fai = 1;
+                }
+                else if (distance <=7) {
+                    fai = 1;
+                    compare--;
+                }
                 else return;
             }
-            if(apt.buy_location_address2_x && apt.location_address2_y) {
+            if(apt.buy_location_address2_x && apt.buy_location_address2_y) {
                 let distance = this.getDistanceFromLatLonInKm(apt.buy_location_address2_x, apt.buy_location_address2_y, inputData.location_address_x, inputData.location_address_y)
-                if(distance<=1) compare = compare + 3;
-                else if (distance <=5) compare++;
-                else if (distance <=7) compare--;
+                if(distance<=1) {
+                    compare = compare + 3;
+                    fai = 2;
+                }
+                else if (distance <=5) {
+                    compare++;
+                    fai = 2;
+                }
+                else if (distance <=7) {
+                    fai = 2;
+                    compare--;
+                }
                 else return;
             }
-            if(apt.buy_location_address3_x && apt.location_address3_y) {
+            if(apt.buy_location_address3_x && apt.buy_location_address3_y) {
                 let distance = this.getDistanceFromLatLonInKm(apt.buy_location_address3_x, apt.buy_location_address3_y, inputData.location_address_x, inputData.location_address_y)
-                if(distance<=1) compare = compare + 3;
-                else if (distance <=5) compare++;
-                else if (distance <=7) compare--;
+                if(distance<=1) {
+                    compare = compare + 3;
+                    fai = 3;
+                }
+                else if (distance <=5) {
+                    compare++;
+                    fai = 3;
+                }
+                else if (distance <=7) {
+                    fai = 3;
+                    compare--;
+                }
                 else return;
             }      
         }
@@ -218,29 +248,29 @@ export class GlobalService {
 
         //price
         if (inputData.price) {
-            console.log('price 1', apt.buy_price_from, apt.buy_price_to);
+            //console.log('price 1', apt.buy_price_from, apt.buy_price_to);
             if (apt.buy_price_from || apt.buy_price_to) {
-                console.log('price 2');
+                //console.log('price 2');
                 if (apt.buy_price_from) {
-                    console.log('price 3', apt.buy_price_from, typeof apt.buy_price_from);
+                    //console.log('price 3', apt.buy_price_from, typeof apt.buy_price_from);
                     if (inputData.price >= apt.buy_price_from) {
-                        console.log('price 4');
+                        //console.log('price 4');
                         compare = compare + 2;
                     }
                     else if (inputData.price >= apt.buy_price_from - 1000000) {
-                        console.log('price 5');
+                        //console.log('price 5');
                         compare = compare + 1;
                     }
                     else return;
                 }
                 if (apt.buy_price_to) {
-                    console.log('price 22');
+                    //console.log('price 22');
                     if (inputData.price <= apt.buy_price_to) {
-                        console.log('price 23');
+                        //console.log('price 23');
                         compare = compare + 2;
                     }
                     else if (inputData.price <= apt.buy_price_to + 1000000) {
-                        console.log('price 24');
+                        //console.log('price 24');
                         compare = compare + 1;
                     }
                     else return;
@@ -282,6 +312,6 @@ export class GlobalService {
 
 
 
-        return compare;
+        return {score: compare, fit_address_index: fai};
     }
 } 

@@ -30,7 +30,8 @@ const catSchema = new mongoose.Schema({
   buy_location_address2_y: String,
   buy_location_address2_x: String,
   buy_location_address3_y: String,
-  buy_location_address3_x: String
+  buy_location_address3_x: String,
+  added_by: String
 });
 
 const Cat = mongoose.model('Cat', catSchema);

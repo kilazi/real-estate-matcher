@@ -1,3 +1,4 @@
+import { AuthService } from './../services/auth.service';
 import { Router } from '@angular/router';
 import { GlobalService } from './../services/global.service';
 import { ToastComponent } from './../shared/toast/toast.component';
@@ -21,8 +22,8 @@ export class AddApartmentsComponent implements OnInit {
         private gs: GlobalService,
         private _sanitizer: DomSanitizer,
         public toast: ToastComponent,
-        private router: Router
-
+        private router: Router,
+        private auth: AuthService
 
     ) {
         console.log('addApartments here');
@@ -74,10 +75,10 @@ export class AddApartmentsComponent implements OnInit {
     buy_location_address2_y
     buy_location_address3_x
     buy_location_address3_y
-
+    user;
     ngOnInit() {
-
-
+        console.log('current user,', this.auth.currentUser);
+        this.user = this.auth.currentUser;
         let init = () => {
             this.map = new ymaps.Map("map", {
                 center: [55.76, 37.64],
@@ -136,7 +137,7 @@ export class AddApartmentsComponent implements OnInit {
             if (this.type == 'buy') this.gs.runOnTimeout(() => this.sortCats('buy'));
             if (this.type == 'sell') this.gs.runOnTimeout(() => this.sortCats('sell'));
         })
-        
+
 
 
         // this.addBuyForm.valueChanges.subscribe(res => {
@@ -150,7 +151,7 @@ export class AddApartmentsComponent implements OnInit {
 
     sortCats(type) {
         this.filteredCats = [];
-        this.map.geoObjects.removeAll() 
+        this.map.geoObjects.removeAll()
         this.cats.forEach(cat => {
             let compareScore;
 
@@ -175,9 +176,16 @@ export class AddApartmentsComponent implements OnInit {
             // setTimeout(() => {
             if (type == 'buy') compareScore = this.gs.getCompareBuy(form, cat);
             if (type == 'sell') compareScore = this.gs.getCompareSell(form, cat);
-            if (compareScore) {
-                cat['compare'] = compareScore;
-                if(type=='buy') this.addApartmentOnMap(cat);
+            console.log('compare_sore', compareScore);
+            if (compareScore && compareScore.score) {
+                cat['compare'] = compareScore.score;
+                if (type == 'buy') this.addApartmentOnMap(cat);
+                if (type == 'sell') {
+                    cat.fit_address=cat['buy_location_address'+compareScore.fit_address_index];
+                    cat.fit_x = cat['buy_location_address'+compareScore.fit_address_index+'_x'];
+                    cat.fit_y = cat['buy_location_address'+compareScore.fit_address_index+'_y'];
+                    this.addApartmentOnMap(cat);
+                }
                 this.filteredCats.push(cat);
             }
             // }, 100)
@@ -224,24 +232,79 @@ export class AddApartmentsComponent implements OnInit {
 
 
     addApartmentOnMap(item) {
-        let myGeoObject = new ymaps.GeoObject({
-            // Описание геометрии.
-            geometry: {
-                type: "Point",
-                coordinates: [item.location_address_x, item.location_address_y]
-            },
-            // Свойства.
-            properties: {
-                // Контент метки.
-                iconContent: item.rooms + '-комн квартира',
-                hintContent: item.price+'р, '+item.size+' кв.м, '+item.rooms+' комнат, '+item.level+' этаж.'
+        console.log('addapartments on map');
+        let myGeoObject;
+        if (item.type == 'buy') {
+            let shownProps = [];
+
+            if (item.fit_address && item.fit_address != 'false') {
+                shownProps.push(item.fit_address);
             }
-        }, { 
-                // Опции.
-                // Иконка метки будет растягиваться под размер ее содержимого.
-                preset: 'islands#blackStretchyIcon'
-            })
+            if (item.buy_price_from && item.buy_price_from != 'false') {
+                shownProps.push('Цена от: ' + item.buy_price_from + 'руб.');
+            }
+            if (item.buy_price_to && item.buy_price_to != 'false') {
+                shownProps.push('Цена до: ' + item.buy_price_to + 'руб.');
+            }
+            if (item.buy_size_from && item.buy_size_from != 'false') {
+                shownProps.push('Площадь от: ' + item.buy_size_from + 'кв.м.');
+            }
+            if (item.buy_size_to && item.buy_size_to != 'false') {
+                shownProps.push('Площадь до: ' + item.buy_size_to + 'кв.м.');
+            }
+            if (item.buy_rooms_from && item.buy_rooms_from != 'false') {
+                shownProps.push('Комнат от: ' + item.buy_rooms_from);
+            }
+            if (item.buy_rooms_to && item.buy_rooms_to != 'false') {
+                shownProps.push('Комнат до: ' + item.buy_rooms_to);
+            }
+            if (item.buy_description && item.buy_description != 'false') {
+                shownProps.push('Доп. описание: ' + item.buy_description);
+            }
+            myGeoObject = new ymaps.Circle([[item.fit_x, item.fit_y], 3000], {
+                // Контент метки.
+                iconContent: shownProps[0],
+                hintContent: shownProps.join('; ')
+            }, {
+                    geodesic: true
+                })
+        } else {
+            let shownProps = [];
+
+            if (item.location_address && item.location_address != 'false') {
+                shownProps.push(item.location_address);
+            }
+            if (item.price && item.price != 'false') {
+                shownProps.push('Цена: ' + item.price + 'руб.');
+            }
+            if (item.size && item.size != 'false') {
+                shownProps.push('Площадь: ' + item.size + 'кв.м.');
+            }
+            if (item.rooms && item.rooms != 'false') {
+                shownProps.push('Комнат: ' + item.rooms);
+            }
+            if (item.description && item.description != 'false') {
+                shownProps.push('Доп. описание: ' + item.description);
+            }
+            myGeoObject = new ymaps.GeoObject({
+                // Описание геометрии.
+                geometry: {
+                    type: "Point",
+                    coordinates: [item.location_address_x, item.location_address_y]
+                },
+                // Свойства.
+                properties: {
+                    // Контент метки.
+                    iconContent: shownProps[0],
+                    hintContent: shownProps.join('; ')
+                }
+            }, {
+                    // Опции.
+                    // Иконка метки будет растягиваться под размер ее содержимого.
+                    preset: 'islands#blackStretchyIcon'
+                })
             console.log('add apartment on map', item);
+        }
         this.map.geoObjects.add(myGeoObject);
     }
 
@@ -354,7 +417,7 @@ export class AddApartmentsComponent implements OnInit {
     addCat(buy = false) {
         let form = this.addCatForm.value;
         if (buy) form = this.addBuyForm.value
-
+        form['added_by'] = this.user.username;
         form['location_address_x'] = this.location_address_x
         form['location_address_y'] = this.location_address_y
         form['buy_location_address1_y'] = this.buy_location_address1_y

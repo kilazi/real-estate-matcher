@@ -17,18 +17,18 @@ export class CatsComponent implements OnInit {
   isEditing = -1;
 
   addCatForm: FormGroup;
-  location_address = new FormControl('',[]);
-  rooms = new FormControl('',[]);
-  size = new FormControl('',[]);
-  price = new FormControl('',[]);
+  location_address = new FormControl('', []);
+  rooms = new FormControl('', []);
+  size = new FormControl('', []);
+  price = new FormControl('', []);
   // creator = new FormControl('',[]);
-  description = new FormControl('',[]);
-  level = new FormControl('',[]);
+  description = new FormControl('', []);
+  level = new FormControl('', []);
 
 
   constructor(private catService: CatService,
-              private formBuilder: FormBuilder,
-              public toast: ToastComponent) { }
+    private formBuilder: FormBuilder,
+    public toast: ToastComponent) { }
 
   ngOnInit() {
     this.getCats();
@@ -47,12 +47,19 @@ export class CatsComponent implements OnInit {
     this.catService.getCats().subscribe(
       data => {
         this.cats = data;
+        this.cats.forEach((cat, i) => {
+          for (const key in cat) {
+            console.log('iterating', cat[key], typeof cat[key]);
+            if(!cat[key]) delete this.cats[i][key];
+          }
+        })
+
         console.log('got cats', data);
-      }, 
+      },
       error => console.log(error),
       () => this.isLoading = false
     );
-    
+
   }
 
   addCat() {
@@ -61,7 +68,7 @@ export class CatsComponent implements OnInit {
         const newCat = res.json();
         this.cats.push(newCat);
         this.addCatForm.reset();
-        this.toast.setMessage('item added successfully.', 'success');
+        this.toast.setMessage('.', 'success');
       },
       error => console.log(error)
     );
@@ -92,12 +99,12 @@ export class CatsComponent implements OnInit {
   }
 
   deleteCat(cat) {
-    if (window.confirm('Are you sure you want to permanently delete this item?')) {
+    if (window.confirm('Вы точно уверены, что хотите удалить эту квартиру?')) {
       this.catService.deleteCat(cat).subscribe(
         res => {
           const pos = this.cats.map(elem => elem._id).indexOf(cat._id);
           this.cats.splice(pos, 1);
-          this.toast.setMessage('item deleted successfully.', 'success');
+          this.toast.setMessage('Квартира успешно удалена.', 'success');
         },
         error => console.log(error)
       );
