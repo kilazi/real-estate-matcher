@@ -11,35 +11,35 @@
       <div class="apartment" *ngFor="let cat of cats; let i = index">
         <form class="form-inline" #form="ngForm" *ngIf="cat.type=='sell'" (ngSubmit)="editCat(cat)" style="display:inline">
           <b>Квартира на продажу от {{cat.added_by}}</b>
-          <div class="attribute" *ngIf="cat.location_address != 'false'">
+          <div class="attribute" >
             <span class="name">Адрес</span>
             <span *ngIf="isEditing == -1">{{cat.location_address}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.location_address" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.rooms != 'false'">
+          <div class="attribute" >
             <span class="name">Кол-во комнат</span>
             <span *ngIf="isEditing == -1">{{cat.rooms}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.rooms" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.size != 'false'">
+          <div class="attribute" >
             <span class="name">Площадь (кв.м)</span>
             <span *ngIf="isEditing == -1">{{cat.size}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.size" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.price != 'false'">
+          <div class="attribute" >
             <span class="name">Цена</span>
             <span *ngIf="isEditing == -1">{{cat.price}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.price" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.level != 'false'">
+          <div class="attribute" >
             <span class="name">Этаж</span>
             <span *ngIf="isEditing == -1">{{cat.level}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.level" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.description != 'false'">
+          <div class="attribute" >
             <span class="name">Доп. описание</span>
             <span *ngIf="isEditing == -1">{{cat.description}}</span>
-            <span *ngIf="isEditing == i"><textarea class="form-control" type="text" name="name" [(ngModel)]="cat.description" placeholder="" required></textarea></span>
+            <span *ngIf="isEditing == i"><textarea class="form-control" type="text" name="name" rows="10" [(ngModel)]="cat.description" placeholder="" required></textarea></span>
           </div>
           <div class="buttons" *ngIf="isEditing == -1">
             <button class="btn btn-sm btn-warning" (click)="enableEditing(cat, i)"><i class="fa fa-pencil"></i> Изменить</button>
@@ -53,72 +53,72 @@
 
         <form class="form-inline" #form1="ngForm" *ngIf="cat.type=='buy'" (ngSubmit)="editCat(cat)" style="display:inline">
           <b>Покупатель на квартиру от {{cat.added_by}}</b>
-          <div class="attribute" *ngIf="cat.buy_location_address1 != 'false'">
+          <div class="attribute" >
             <span class="name">Адрес</span>
             <span *ngIf="isEditing == -1">{{cat.buy_location_address1}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_location_address1" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_location_address2 != 'false'">
+          <div class="attribute" >
             <span class="name">Адрес 1</span>
             <span *ngIf="isEditing == -1">{{cat.buy_location_address2}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_location_address2" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_location_address3 != 'false'">
+          <div class="attribute" >
             <span class="name">Адрес 2</span>
             <span *ngIf="isEditing == -1">{{cat.buy_location_address3}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_location_address3" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_rooms_from != 'false'">
+          <div class="attribute" >
             <span class="name">Кол-во комнат от</span>
             <span *ngIf="isEditing == -1">{{cat.buy_rooms_from}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_rooms_from" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_rooms_to != 'false'">
+          <div class="attribute" >
             <span class="name">Кол-во комнат до</span>
             <span *ngIf="isEditing == -1">{{cat.buy_rooms_to}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_rooms_to" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_size_from != 'false'">
+          <div class="attribute" >
             <span class="name">Площадь (кв.м) от</span>
             <span *ngIf="isEditing == -1">{{cat.buy_size_from}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_size_from" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_to != 'false'">
+          <div class="attribute" >
             <span class="name">Площадь (кв.м) до</span>
             <span *ngIf="isEditing == -1">{{cat.buy_size_to}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_size_to" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_price_from != 'false'">
+          <div class="attribute" >
             <span class="name">Цена от</span>
             <span *ngIf="isEditing == -1">{{cat.buy_price_from}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_price_from" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_price_to != 'false'">
+          <div class="attribute" >
             <span class="name">Цена до</span>
             <span *ngIf="isEditing == -1">{{cat.buy_price_to}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_price_to" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_level_from != 'false'">
+          <div class="attribute" >
             <span class="name">Этаж от</span>
             <span *ngIf="isEditing == -1">{{cat.buy_level_from}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_level_from" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_level_to != 'false'">
+          <div class="attribute" >
             <span class="name">Этаж до</span>
             <span *ngIf="isEditing == -1">{{cat.buy_level_to}}</span>
             <span *ngIf="isEditing == i"><input class="form-control" type="text" name="name" [(ngModel)]="cat.buy_level_to" placeholder="" required></span>
           </div>
-          <div class="attribute" *ngIf="cat.buy_description != 'false'">
+          <div class="attribute" >
             <span class="name">Доп. описание</span>
             <span *ngIf="isEditing == -1">{{cat.buy_description}}</span>
-            <span *ngIf="isEditing == i"><textarea class="form-control" type="text" name="name" [(ngModel)]="cat.description" placeholder="" required></textarea></span>
+            <span *ngIf="isEditing == i"><textarea class="form-control" type="text" name="name" rows="10" [(ngModel)]="cat.buy_description" placeholder="" required></textarea></span>
           </div>
           <div class="buttons" *ngIf="isEditing == -1">
             <button class="btn btn-sm btn-warning" (click)="enableEditing(cat, i)"><i class="fa fa-pencil"></i> Изменить</button>
             <button class="btn btn-sm btn-danger" (click)="deleteCat(cat)"><i class="fa fa-trash"></i> Удалить</button>
           </div>
           <div class="buttons" *ngIf="isEditing == i">
-            <button class="btn btn-sm btn-primary" type="submit" [disabled]="!form.form.valid"><i class="fa fa-floppy-o"></i> Сохранить</button>
+            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-floppy-o"></i> Сохранить</button>
             <button class="btn btn-sm btn-warning" (click)="cancelEditing(i)"><i class="fa fa-times"></i> Отменить</button>
           </div>
         </form>

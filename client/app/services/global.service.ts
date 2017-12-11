@@ -46,7 +46,7 @@ export class GlobalService {
 
     removeEmptyKeys(object) {
         for (const key in object) {
-            if (key != 'type' && key != 'description' && key.indexOf('location') && key.indexOf('added_by')== -1) {
+            if (key != 'type' && key != 'description' && key.indexOf('location') == -1 && key != 'added_by') {
                 ////console.log('iterate through object', object, key, 'value of the key is [' + object[key] + ']', typeof object[key]);
                 if (!object[key] || object[key] == "") {
                     ////console.log('this key sucks!', key);
@@ -60,36 +60,36 @@ export class GlobalService {
     getCompareBuy(inputData, apt) {
         inputData = this.removeEmptyKeys(inputData);
         apt = this.removeEmptyKeys(apt);
-        //console.log('comparedatabuy', inputData, apt);
+        console.log('comparedatabuy', inputData, apt);
         if (apt.type == 'buy') return;
 
         let compare = 0;
 
         //geo
         if (inputData.buy_location_address1 || inputData.buy_location_address2 || inputData.buy_location_address3) {
-            //console.log('geo 1');
+            console.log('geo 1');
             if(inputData.buy_location_address1_x && inputData.buy_location_address1_y) {
-                //console.log('geo 2');
+                console.log('geo 2');
                 let distance = this.getDistanceFromLatLonInKm(inputData.buy_location_address1_x, inputData.buy_location_address1_y, apt.location_address_x, apt.location_address_y)
                 if(distance<=1) compare = compare + 3;
                 else if (distance <=5) compare++;
                 else if (distance <=7) compare--;
-                // else return;
-                //console.log('geo 3', compare);
+                else return;
+                console.log('geo 3', compare);
             }
             if(inputData.buy_location_address2_x && inputData.buy_location_address2_y) {
                 let distance = this.getDistanceFromLatLonInKm(inputData.buy_location_address2_x, inputData.buy_location_address2_y, apt.location_address_x, apt.location_address_y)
                 if(distance<=1) compare = compare + 3;
                 else if (distance <=5) compare++;
                 else if (distance <=7) compare--;
-                // else return;
+                else return;
             }
             if(inputData.buy_location_address3_x && inputData.buy_location_address3_y) {
                 let distance = this.getDistanceFromLatLonInKm(inputData.buy_location_address3_x, inputData.buy_location_address3_y, apt.location_address_x, apt.location_address_y)
                 if(distance<=1) compare = compare + 3;
                 else if (distance <=5) compare++;
                 else if (distance <=7) compare--;
-                // else return;
+                else return;
             }            
         }
 

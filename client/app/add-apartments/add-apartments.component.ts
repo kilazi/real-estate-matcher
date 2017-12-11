@@ -172,7 +172,7 @@ export class AddApartmentsComponent implements OnInit {
 
             form['type'] = this.type;
 
-            console.log('!!!!!before-compare', form);
+            console.log('!!!!!before-compare', form, cat);
             // setTimeout(() => {
             if (type == 'buy') compareScore = this.gs.getCompareBuy(form, cat);
             if (type == 'sell') compareScore = this.gs.getCompareSell(form, cat);
